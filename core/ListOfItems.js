@@ -54,3 +54,5 @@ ListOfItems.prototype = {
     },
 
 }
+
+module.exports = ListOfItems ; 

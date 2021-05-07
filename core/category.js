@@ -31,7 +31,7 @@ Category.prototype = {
             bind.push(body[prop]);
         }
 
-        let sql = `INSERT INTO Category(name,user,createdAt,updatedAt) VALUES ( ? , ? , ? , ? )`;
+        let sql = `INSERT INTO Category(name,user,createdAt) VALUES ( ? , ? , ?)`;
 
         pool.query(sql, bind, function(err, result) {
             if(err) console.log(err);
@@ -45,34 +45,34 @@ Category.prototype = {
     update:function(old,body,callback){
 
         var self = this ;
-  
+
         self.find(old , function(result) {
-  
+
           if(result) {
-  
+
             var bind = [] ;
-  
+
             for(prop in body){
                 bind.push(body[prop]);
             }
-  
+
             bind.push(old);
-  
+
             let sql = `UPDATE Category SET name = ?, updatedAt = ?  WHERE id= ?`;
-  
+
             pool.query(sql, bind, function(err, ret) {
                 if(err) console.log(err);
-  
+
                 self.find(bind[0], function(user) {
-  
+
                     if(user) {
                             callback(user);
                             return;
                     }
-  
+
                     callback(null);
                 });
-  
+
             });
           }
         });
@@ -91,3 +91,5 @@ Category.prototype = {
     },
 
 }
+
+module.exports = Category ; 

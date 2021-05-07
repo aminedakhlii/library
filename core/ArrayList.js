@@ -14,7 +14,7 @@ ArrayList.prototype = {
             bind.push(body[prop]);
         }
 
-        let sql = `INSERT INTO ArrayList(name,user,createdAt,updatedAt) VALUES ( ? , ? , ? , ? )`;
+        let sql = `INSERT INTO ArrayList(name,user,createdAt) VALUES ( ? , ? , ?)`;
 
         pool.query(sql, bind, function(err, result) {
             if(err) console.log(err);
@@ -39,3 +39,5 @@ ArrayList.prototype = {
     },
 
 }
+
+module.exports = ArrayList ; 

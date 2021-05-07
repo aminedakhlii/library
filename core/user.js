@@ -89,7 +89,7 @@ User.prototype = {
 
           bind.push(old);
 
-          let sql = `UPDATE users SET username = ?,  email = ? WHERE username = ?`;
+          let sql = `UPDATE users SET username = ?,  email = ? WHERE id = ?`;
 
           pool.query(sql, bind, function(err, ret) {
               if(err) console.log(err);

@@ -1,24 +1,20 @@
 const express = require('express');
 const User = require('../core/user');
-const Book = require('../core/book');
+const Item = require('../core/item');
+const Category = require('../core/category');
+const ArrayList = require('../core/arraylist');
+const List = require('../core/list');
+const ListOfItems = require('../core/listOfItems');
 const router = express.Router() ;
 const multer = require('multer') ;
 
 user = new User() ;
-book = new Book() ;
+item = new Item() ;
+category = new Category() ;
+array = new ArrayList() ;
+list = new List();
+listOfItems = new ListOfItems() ;
 
-function setStorage(userId) {
-
-  let storage =  multer.diskStorage({
-    destination : `${__dirname}/../data/images/user/${userId}`,
-    filename : function(req , file , cb){
-      cb(null , userId.toString() + '.jpeg' ) ;
-    }
-  });
-
-  return multer({storage : storage}).single('image') ;
-
-}
 
 router.post('/login' , (req,res,next) => {
   user.login(req.body.username,req.body.password, function(result) {
@@ -26,7 +22,7 @@ router.post('/login' , (req,res,next) => {
       console.log('logged ' + result.username);
       req.session.user = result;
       req.session.opp = 1;
-      res.send({"id" : result.id , "admin" : result.admin}) ;
+      res.send({"id" : result.id}) ;
 
       }
     else res.send(403) ;
@@ -59,21 +55,12 @@ router.post('/register' , (req,res) => {
 
 });
 
-router.get('/setAdmin/:id', (req , res ) => {
-  if(req.session.user) {
-    user.setAdmin(req.session.user,parseInt(req.params.id),function(result){
-      res.send(result.username + "is admin") ;
-    });
-  }
-});
-
 router.get('/loggout', (req, res, next) => {
     // Check if the session is exist
     if(req.session.user) {
         // destroy the session and redirect the user to the index page.
         req.session.destroy(function() {
             console.log('disconnected');
-            res.redirect('/');
         });
     }
     else {
@@ -81,18 +68,150 @@ router.get('/loggout', (req, res, next) => {
     }
 });
 
-router.get('/testsession' , (req , res) =>{
+// updates
+
+router.put('/updateUser/:id' , (req , res) => {
   if(req.session.user) {
-    res.send(200) ;
+    let input = {
+      username  : req.body.username,
+      email  : req.body.email,
+    }
+
+    user.update(req.params.id,input, function(result) {
+      req.session.user = result;
+      req.session.opp = 1 ;
+      res.sendStatus(200);
+    });
+  }
+});
+
+router.put('/updateItem/:id' , (req , res) => {
+  if(req.session.user) {
+    let input = {
+      name  : req.body.name,
+      category  : req.body.category,
+      user  : req.body.user,
+      note  : req.body.note,
+      image  : req.body.image,
+      createdAt  : req.body.createdAt,
+    }
+
+    items.update(req.params.id,input, function(result) {
+      req.session.user = result;
+      req.session.opp = 1 ;
+      res.sendStatus(200);
+    });
+  }
+});
+
+router.put('/updateList/:id' , (req , res) => {
+  if(req.session.user) {
+    let input = {
+      name  : req.body.name,
+      user  : req.body.user,
+      createdAt  : req.body.createdAt,
+    }
+
+    list.update(req.params.id,input, function(result) {
+      req.session.user = result;
+      req.session.opp = 1 ;
+      res.sendStatus(200);
+    });
+  }
+});
+
+router.put('/updateCategory/:id' , (req , res) => {
+  if(req.session.user) {
+    let input = {
+      name  : req.body.name,
+      user  : req.body.user,
+      createdAt  : req.body.createdAt,
+    }
+
+    user.update(req.params.id,input, function(result) {
+      req.session.user = result;
+      req.session.opp = 1 ;
+      res.sendStatus(200);
+    });
+  }
+});
+
+
+// deletion
+
+router.delete('/deleteItem/:id' , (req , res) => {
+  if(req.session.user) {
+    item.delete(req.params.id,
+      () => {
+          res.send();
+      }
+    );
   }
   else res.send(403);
 });
 
-router.get('/books' , (req , res) => {
+router.delete('/deleteList/:id' , (req , res) => {
   if(req.session.user) {
-    book.getAll(
-      (books) => {
-          if(books) res.send(books);
+    list.delete(req.params.id,
+      () => {
+          res.send();
+      }
+    );
+  }
+  else res.send(403);
+});
+
+router.delete('/deleteCategory/:id' , (req , res) => {
+  if(req.session.user) {
+    category.delete(req.params.id,
+      () => {
+          res.send();
+      }
+    );
+  }
+  else res.send(403);
+});
+
+router.delete('/deleteUser/:id' , (req , res) => {
+  if(req.session.user) {
+    user.delete(req.params.id,
+      () => {
+          res.send();
+      }
+    );
+  }
+  else res.send(403);
+});
+
+router.delete('/deleteListOfItems/:id' , (req , res) => {
+  if(req.session.user) {
+    listOfItems.delete(req.params.id,
+      () => {
+          res.send();
+      }
+    );
+  }
+  else res.send(403);
+});
+
+router.delete('/deleteArray/:id' , (req , res) => {
+  if(req.session.user) {
+    array.delete(req.params.id,
+      () => {
+          res.send();
+      }
+    );
+  }
+  else res.send(403);
+});
+
+// finding
+
+router.get('/user/:id' , (req , res) => {
+  if(req.session.user) {
+    user.find(req.params.id,
+      (ret) => {
+          if(ret) res.send(ret);
           else res.send(500) ;
       }
     );
@@ -100,11 +219,11 @@ router.get('/books' , (req , res) => {
   else res.send(403);
 });
 
-router.get('/clients' , (req , res) => {
+router.get('/item/:id' , (req , res) => {
   if(req.session.user) {
-    user.getClients(
-      (clients) => {
-          if(clients) res.send(clients);
+    item.find(req.params.id,
+      (ret) => {
+          if(ret) res.send(ret);
           else res.send(500) ;
       }
     );
@@ -112,11 +231,11 @@ router.get('/clients' , (req , res) => {
   else res.send(403);
 });
 
-router.get('/borrowed/:id' , (req , res) => {
+router.get('/category/:id' , (req , res) => {
   if(req.session.user) {
-    book.findByClient(req.params.id,
-      (books) => {
-          if(books) res.send(books);
+    category.find(req.params.id,
+      (ret) => {
+          if(ret) res.send(ret);
           else res.send(500) ;
       }
     );
@@ -124,11 +243,11 @@ router.get('/borrowed/:id' , (req , res) => {
   else res.send(403);
 });
 
-router.get('/deleteBook/:id' , (req , res) => {
+router.get('/list/:id' , (req , res) => {
   if(req.session.user) {
-    book.delete(req.params.id,
-      (books) => {
-          if(books) res.send(books);
+    list.find(req.params.id,
+      (ret) => {
+          if(ret) res.send(ret);
           else res.send(500) ;
       }
     );
@@ -136,11 +255,11 @@ router.get('/deleteBook/:id' , (req , res) => {
   else res.send(403);
 });
 
-router.get('/borrow/:id' , (req , res) => {
+router.get('/category/:list_id' , (req , res) => {
   if(req.session.user) {
-    book.borrow(req.session.user.id , req.params.id,
-      (books) => {
-          if(books) res.send(books.toString());
+    listOfItems.find(req.params.list_id,
+      (ret) => {
+          if(ret) res.send(ret);
           else res.send(500) ;
       }
     );
@@ -148,28 +267,108 @@ router.get('/borrow/:id' , (req , res) => {
   else res.send(403);
 });
 
-router.get('/mybooks/:id' , (req , res) => {
-  if(req.session.user) {
-    book.getBorrowed(req.params.id,
-      (books) => {
-          if(books) res.send(books);
-          else res.send(500) ;
-      }
-    );
-  }
-  else res.send(403);
-});
 
-router.post('/createBook' , (req , res) => {
+
+
+
+
+
+
+
+
+
+
+
+// Creation
+
+
+router.post('/createItem' , (req , res) => {
   if(req.session.user) {
 
     let input = {
-      title  : req.body.title,
-      description  : req.body.description,
-      Nbr : req.body.Nbr
+      name  : req.body.name,
+      category  : req.body.category,
+      user  : req.body.user,
+      note  : req.body.note,
+      image  : req.body.image,
+      createdAt  : req.body.createdAt,
     }
 
-    book.create(
+    item.create(
+      input, (result) => {
+          if(result)res.send(200) ;
+          else res.send(500) ;
+      }
+    );
+  }
+  else res.send(403);
+});
+
+router.post('/createCategory' , (req , res) => {
+  if(req.session.user) {
+
+    let input = {
+      name  : req.body.name,
+      user  : req.body.user,
+      createdAt  : req.body.createdAt,
+    }
+
+    category.create(
+      input, (result) => {
+          if(result)res.send(200) ;
+          else res.send(500) ;
+      }
+    );
+  }
+  else res.send(403);
+});
+
+router.post('/createList' , (req , res) => {
+  if(req.session.user) {
+
+    let input = {
+      name  : req.body.name,
+      user  : req.body.user,
+      createdAt  : req.body.createdAt,
+    }
+
+    list.create(
+      input, (result) => {
+          if(result)res.send(200) ;
+          else res.send(500) ;
+      }
+    );
+  }
+  else res.send(403);
+});
+
+router.post('/createListOfItems' , (req , res) => {
+  if(req.session.user) {
+
+    let input = {
+      list  : req.body.list,
+      item  : req.body.item,
+    }
+
+    listOfItems.create(
+      input, (result) => {
+          if(result)res.send(200) ;
+          else res.send(500) ;
+      }
+    );
+  }
+  else res.send(403);
+});
+
+router.post('/createArrayList' , (req , res) => {
+  if(req.session.user) {
+
+    let input = {
+      list  : req.body.list,
+      number  : req.body.number,
+    }
+
+    array.create(
       input, (result) => {
           if(result)res.send(200) ;
           else res.send(500) ;
