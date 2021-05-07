@@ -2,7 +2,7 @@ const express = require('express');
 const User = require('../core/user');
 const Item = require('../core/item');
 const Category = require('../core/category');
-const ArrayList = require('../core/arraylist');
+const ArrayList = require('../core/arrayList');
 const List = require('../core/list');
 const ListOfItems = require('../core/listOfItems');
 const router = express.Router() ;
@@ -57,7 +57,7 @@ router.post('/register' , (req,res) => {
 
 router.get('/loggout', (req, res, next) => {
     // Check if the session is exist
-    if(req.session.user) {
+    if(req.session.user){
         // destroy the session and redirect the user to the index page.
         req.session.destroy(function() {
             console.log('disconnected');
@@ -71,29 +71,29 @@ router.get('/loggout', (req, res, next) => {
 // updates
 
 router.put('/updateUser/:id' , (req , res) => {
-  if(req.session.user) {
+
     let input = {
       username  : req.body.username,
       email  : req.body.email,
     }
 
-    user.update(req.params.id,input, function(result) {
+    user.modify(req.params.id,input, function(result) {
       req.session.user = result;
       req.session.opp = 1 ;
       res.sendStatus(200);
     });
-  }
+
 });
 
 router.put('/updateItem/:id' , (req , res) => {
-  if(req.session.user) {
+
     let input = {
       name  : req.body.name,
       category  : req.body.category,
       user  : req.body.user,
       note  : req.body.note,
       image  : req.body.image,
-      createdAt  : req.body.createdAt,
+      updatedAt  : req.body.updatedAt,
     }
 
     items.update(req.params.id,input, function(result) {
@@ -101,15 +101,15 @@ router.put('/updateItem/:id' , (req , res) => {
       req.session.opp = 1 ;
       res.sendStatus(200);
     });
-  }
+
 });
 
 router.put('/updateList/:id' , (req , res) => {
-  if(req.session.user) {
+
     let input = {
       name  : req.body.name,
       user  : req.body.user,
-      createdAt  : req.body.createdAt,
+      updatedAt  : req.body.updatedAt,
     }
 
     list.update(req.params.id,input, function(result) {
@@ -117,174 +117,149 @@ router.put('/updateList/:id' , (req , res) => {
       req.session.opp = 1 ;
       res.sendStatus(200);
     });
-  }
+
 });
 
 router.put('/updateCategory/:id' , (req , res) => {
-  if(req.session.user) {
+
     let input = {
       name  : req.body.name,
       user  : req.body.user,
-      createdAt  : req.body.createdAt,
+      updatedAt  : req.body.updatedAt,
     }
 
-    user.update(req.params.id,input, function(result) {
+    category.update(req.params.id,input, function(result) {
       req.session.user = result;
       req.session.opp = 1 ;
       res.sendStatus(200);
     });
-  }
+
 });
 
 
 // deletion
 
 router.delete('/deleteItem/:id' , (req , res) => {
-  if(req.session.user) {
+
     item.delete(req.params.id,
       () => {
           res.send();
       }
     );
-  }
-  else res.send(403);
-});
+  });
 
 router.delete('/deleteList/:id' , (req , res) => {
-  if(req.session.user) {
+
     list.delete(req.params.id,
       () => {
           res.send();
       }
     );
-  }
-  else res.send(403);
+
 });
 
 router.delete('/deleteCategory/:id' , (req , res) => {
-  if(req.session.user) {
+
     category.delete(req.params.id,
       () => {
           res.send();
       }
     );
-  }
-  else res.send(403);
+
 });
 
 router.delete('/deleteUser/:id' , (req , res) => {
-  if(req.session.user) {
+
     user.delete(req.params.id,
       () => {
           res.send();
       }
     );
-  }
-  else res.send(403);
+
 });
 
 router.delete('/deleteListOfItems/:id' , (req , res) => {
-  if(req.session.user) {
+
     listOfItems.delete(req.params.id,
       () => {
           res.send();
       }
     );
-  }
-  else res.send(403);
+
 });
 
 router.delete('/deleteArray/:id' , (req , res) => {
-  if(req.session.user) {
+
     array.delete(req.params.id,
       () => {
           res.send();
       }
     );
-  }
-  else res.send(403);
+
 });
 
 // finding
 
 router.get('/user/:id' , (req , res) => {
-  if(req.session.user) {
+
     user.find(req.params.id,
       (ret) => {
           if(ret) res.send(ret);
           else res.send(500) ;
       }
     );
-  }
-  else res.send(403);
+
 });
 
 router.get('/item/:id' , (req , res) => {
-  if(req.session.user) {
+
     item.find(req.params.id,
       (ret) => {
           if(ret) res.send(ret);
           else res.send(500) ;
       }
     );
-  }
-  else res.send(403);
+
 });
 
 router.get('/category/:id' , (req , res) => {
-  if(req.session.user) {
+
     category.find(req.params.id,
       (ret) => {
           if(ret) res.send(ret);
           else res.send(500) ;
       }
     );
-  }
-  else res.send(403);
+
 });
 
 router.get('/list/:id' , (req , res) => {
-  if(req.session.user) {
+
     list.find(req.params.id,
       (ret) => {
           if(ret) res.send(ret);
           else res.send(500) ;
       }
     );
-  }
-  else res.send(403);
+
 });
 
 router.get('/category/:list_id' , (req , res) => {
-  if(req.session.user) {
+
     listOfItems.find(req.params.list_id,
       (ret) => {
           if(ret) res.send(ret);
           else res.send(500) ;
       }
     );
-  }
-  else res.send(403);
+
 });
-
-
-
-
-
-
-
-
-
-
-
 
 
 // Creation
 
 
 router.post('/createItem' , (req , res) => {
-  if(req.session.user) {
-
     let input = {
       name  : req.body.name,
       category  : req.body.category,
@@ -300,13 +275,9 @@ router.post('/createItem' , (req , res) => {
           else res.send(500) ;
       }
     );
-  }
-  else res.send(403);
 });
 
 router.post('/createCategory' , (req , res) => {
-  if(req.session.user) {
-
     let input = {
       name  : req.body.name,
       user  : req.body.user,
@@ -319,13 +290,10 @@ router.post('/createCategory' , (req , res) => {
           else res.send(500) ;
       }
     );
-  }
-  else res.send(403);
+
 });
 
 router.post('/createList' , (req , res) => {
-  if(req.session.user) {
-
     let input = {
       name  : req.body.name,
       user  : req.body.user,
@@ -338,13 +306,10 @@ router.post('/createList' , (req , res) => {
           else res.send(500) ;
       }
     );
-  }
-  else res.send(403);
+
 });
 
 router.post('/createListOfItems' , (req , res) => {
-  if(req.session.user) {
-
     let input = {
       list  : req.body.list,
       item  : req.body.item,
@@ -356,13 +321,10 @@ router.post('/createListOfItems' , (req , res) => {
           else res.send(500) ;
       }
     );
-  }
-  else res.send(403);
+
 });
 
 router.post('/createArrayList' , (req , res) => {
-  if(req.session.user) {
-
     let input = {
       list  : req.body.list,
       number  : req.body.number,
@@ -374,8 +336,7 @@ router.post('/createArrayList' , (req , res) => {
           else res.send(500) ;
       }
     );
-  }
-  else res.send(403);
+
 });
 
 module.exports = router ;

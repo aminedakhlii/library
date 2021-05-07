@@ -54,7 +54,7 @@ Item.prototype = {
 
             bind.push(old);
 
-            let sql = `UPDATE item SET name = ?,  image = ?, note = ?,updatedAt = ?  WHERE id= ?`;
+            let sql = `UPDATE item SET name = ?, category = ?, user = ? ,  note = ? , image = ?,updatedAt = ?  WHERE id= ?`;
 
             pool.query(sql, bind, function(err, ret) {
                 if(err) console.log(err);
@@ -86,4 +86,4 @@ Item.prototype = {
 
 }
 
-module.exports = Item ; 
+module.exports = Item ;

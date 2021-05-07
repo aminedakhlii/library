@@ -2,11 +2,11 @@ const pool = require('./pool');
 function List(){};
 List.prototype = {
 
-    find: function(item = null , callback)
+    find: function(list = null , callback)
     {
 
 
-        let sql = `SELECT * FROM List WHERE id = ?`;
+        let sql = `SELECT * FROM list WHERE id = ?`;
 
 
         pool.query(sql,list, function(err, result) {
@@ -31,7 +31,7 @@ List.prototype = {
             bind.push(body[prop]);
         }
 
-        let sql = `INSERT INTO List(name,user,createdAt) VALUES ( ? , ? , ?)`;
+        let sql = `INSERT INTO list(name,user,createdAt) VALUES ( ? , ? , ?)`;
 
         pool.query(sql, bind, function(err, result) {
             if(err) console.log(err);
@@ -58,7 +58,7 @@ List.prototype = {
 
             bind.push(old);
 
-            let sql = `UPDATE List SET name = ?, updatedAt = ?  WHERE id= ?`;
+            let sql = `UPDATE list SET name = ?, user = ? ,updatedAt = ?  WHERE id= ?`;
 
             pool.query(sql, bind, function(err, ret) {
                 if(err) console.log(err);
@@ -82,7 +82,7 @@ List.prototype = {
 
     delete : function(id,callback) {
 
-        let sql = `DELETE FROM List WHERE id = ?`;
+        let sql = `DELETE FROM list WHERE id = ?`;
         pool.query(sql,id,function(err , ret) {
           if(err) console.log(err);
           callback();

@@ -6,10 +6,10 @@ Category.prototype = {
     {
 
 
-        let sql = `SELECT * FROM Category WHERE id = ?`;
+        let sql = `SELECT * FROM category WHERE id = ?`;
 
 
-        pool.query(sql,list, function(err, result) {
+        pool.query(sql,item, function(err, result) {
             if(err) console.log(err);
 
             if(result.length) {
@@ -31,7 +31,7 @@ Category.prototype = {
             bind.push(body[prop]);
         }
 
-        let sql = `INSERT INTO Category(name,user,createdAt) VALUES ( ? , ? , ?)`;
+        let sql = `INSERT INTO category(name,user,createdAt) VALUES ( ? , ? , ?)`;
 
         pool.query(sql, bind, function(err, result) {
             if(err) console.log(err);
@@ -58,9 +58,11 @@ Category.prototype = {
 
             bind.push(old);
 
-            let sql = `UPDATE Category SET name = ?, updatedAt = ?  WHERE id= ?`;
+            let sql = `UPDATE category SET name = ?, user = ? ,updatedAt = ?  WHERE id= ?`;
 
             pool.query(sql, bind, function(err, ret) {
+
+                console.log(this.sql);
                 if(err) console.log(err);
 
                 self.find(bind[0], function(user) {
@@ -82,7 +84,7 @@ Category.prototype = {
 
     delete : function(id,callback) {
 
-        let sql = `DELETE FROM Category WHERE id = ?`;
+        let sql = `DELETE FROM category WHERE id = ?`;
         pool.query(sql,id,function(err , ret) {
           if(err) console.log(err);
           callback();
@@ -92,4 +94,4 @@ Category.prototype = {
 
 }
 
-module.exports = Category ; 
+module.exports = Category ;

@@ -6,7 +6,7 @@ ListOfItems.prototype = {
     {
 
 
-        let sql = `SELECT * FROM ListOfItems WHERE list = ?`;
+        let sql = `SELECT * FROM listOfItems WHERE list = ?`;
 
 
         pool.query(sql,list, function(err, result) {
@@ -31,7 +31,7 @@ ListOfItems.prototype = {
             bind.push(body[prop]);
         }
 
-        let sql = `INSERT INTO ListOfItems(list,item) VALUES ( ? , ? )`;
+        let sql = `INSERT INTO listOfItems(list,item) VALUES ( ? , ? )`;
 
         pool.query(sql, bind, function(err, result) {
             if(err) console.log(err);
@@ -45,7 +45,7 @@ ListOfItems.prototype = {
 
     delete : function(id,callback) {
 
-        let sql = `DELETE FROM ListOfItems WHERE id = ?`;
+        let sql = `DELETE FROM listOfItems WHERE id = ?`;
         pool.query(sql,id,function(err , ret) {
           if(err) console.log(err);
           callback();
@@ -55,4 +55,4 @@ ListOfItems.prototype = {
 
 }
 
-module.exports = ListOfItems ; 
+module.exports = ListOfItems ;

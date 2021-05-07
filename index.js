@@ -3,7 +3,6 @@ const session = require('express-session');
 const http = require('http');
 const path = require('path') ;
 const pageRouter = require('./routes/pages');
-const chatsRouter = require('./routes/chatroutes');
 const app = express() ;
 const server = http.createServer(app) ;
 const bodyParser = require('body-parser');
@@ -29,7 +28,6 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(bodyParser.json({limit: '50mb'}));
 
 app.use('/',pageRouter);
-app.use('/messages/',chatsRouter);
 
 
 app.use((req, res, next) =>  {

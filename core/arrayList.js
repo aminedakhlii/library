@@ -14,7 +14,7 @@ ArrayList.prototype = {
             bind.push(body[prop]);
         }
 
-        let sql = `INSERT INTO ArrayList(name,user,createdAt) VALUES ( ? , ? , ?)`;
+        let sql = `INSERT INTO arrayList(name,user,createdAt) VALUES ( ? , ? , ?)`;
 
         pool.query(sql, bind, function(err, result) {
             if(err) console.log(err);
@@ -30,7 +30,7 @@ ArrayList.prototype = {
 
     delete : function(id,callback) {
 
-        let sql = `DELETE FROM ArrayList WHERE id = ?`;
+        let sql = `DELETE FROM arrayList WHERE id = ?`;
         pool.query(sql,id,function(err , ret) {
           if(err) console.log(err);
           callback();
@@ -40,4 +40,4 @@ ArrayList.prototype = {
 
 }
 
-module.exports = ArrayList ; 
+module.exports = ArrayList ;
