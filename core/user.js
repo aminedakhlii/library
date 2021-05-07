@@ -45,7 +45,7 @@ User.prototype = {
             bind.push(body[prop]);
         }
 
-        let sql = `INSERT INTO users(username, email, admin, super_admin, password) VALUES (?, ?, ?, ?, ?)`;
+        let sql = `INSERT INTO users(username, email, password) VALUES (?, ?, ?)`;
 
         pool.query(sql, bind, function(err, result) {
             if(err) console.log(err);
@@ -89,7 +89,7 @@ User.prototype = {
 
           bind.push(old);
 
-          let sql = `UPDATE users SET username = ?, fullname = ?, email = ? WHERE username = ?`;
+          let sql = `UPDATE users SET username = ?,  email = ? WHERE username = ?`;
 
           pool.query(sql, bind, function(err, ret) {
               if(err) console.log(err);
@@ -109,22 +109,6 @@ User.prototype = {
       });
     },
 
-    setAdmin: function(current,target,callback){
-      var self = this ;
-          if(current.super_admin){
-            self.find(target,function(ret_){
-              if(ret_){
-                console.log(ret_.fullname);
-                let sql = `UPDATE users SET admin = true WHERE id = ?`;
-                pool.query(sql,ret_.id,function(err , ret){
-                  if(err) throw err ;
-                  callback(ret_);
-                });
-              }
-            });
-          }
-          else console.log(current.super_admin);
-    },
 
     delete: function(id,callback) {
 
@@ -136,19 +120,6 @@ User.prototype = {
 
     },
 
-    getClients : function(callback) {
-      let sql = `SELECT * FROM users where admin=false`;
-      pool.query(sql, [], function(err, result) {
-        if(err) throw err ;
-
-        if(result.length) {
-            callback(result);
-        }else {
-            callback(null);
-        }
-
-      });
-    },
 
 
 }
